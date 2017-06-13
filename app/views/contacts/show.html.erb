@@ -1,0 +1,111 @@
+<div class="upper-banner">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>Gestion des contacts</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-8">
+
+      <!-- profile_summary -->
+      <div class="row">
+        <div class="col-xs-3 text-right">
+          <%= image_tag @contact.profile_pic_url, class: "avatar-large" %>
+        </div>
+
+        <div class="col-xs-9">
+          <div class="contact-details">
+            <h3><%= @contact.first_name %> <%= @contact.part %> <%= @contact.last_name %></h3>
+            <h4>Web developper @<strong>Smartexpat</strong></h4>
+            <h5><i class="fa fa-envelope" aria-hidden="true"></i> <%= link_to @contact.email, "mailto:"+@contact.email %> | <i class="fa fa-mobile" aria-hidden="true"></i> <%= @contact.mobile %></h5>
+            <h5><i class="fa fa-linkedin-square" aria-hidden="true"></i> <%= link_to @contact.linkedin, @contact.linkedin, target: "_blank" %></h5>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- tabs -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="tabs">
+            <a class="tab active" data-target="#tab-pro">
+              <p>Informations</p>
+              <h3>professionnelles</h3>
+            </a>
+            <a class="tab" data-target="#tab-perso">
+              <p>Informations</p>
+              <h3>personnelles</h3>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- tab pro -->
+      <div class="row tab-content" id="tab-pro">
+        <div class="col-xs-12">
+          <p>Infos pro</p>
+        </div>
+      </div>
+
+      <!-- tab perso -->
+      <div class="row tab-content hidden" id="tab-perso">
+        <div class="col-xs-12">
+          <div class="col-xs-6">
+            <p><strong>Date de naissance :</strong> <%= @contact.date_of_birth.strftime("%d/%m/%Y")%> <em>(<%= (DateTime.now - @contact.date_of_birth).to_i / 365 %> ans)</em> </p>
+            <p><%= @contact.address_one %></p>
+            <p><%= @contact.address_two %></p>
+            <p><%= @contact.zipcode %> <%= @contact.city.capitalize %> - <%= @contact.country.capitalize %></p>
+          </div>
+          <div class="col-xs-6">
+            <!-- The map will be drawn in this div -->
+              <div id="map" style="width: 100%; height: 600px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-sm-4"></div>
+  </div>
+</div>
+
+<% content_for(:after_js) do %>
+    <%= javascript_tag do %>
+        $(function(){
+          $(".tab").on("click", function(e){
+            <!-- // Change active tab -->
+            $(".tab").removeClass('active');
+            $(this).addClass('active');
+            <!-- // Hide all tab-content (use class="hidden") -->
+            $(".tab-content").addClass('hidden');
+            <!-- // Show target tab-content (use class="hidden") -->
+            $($(this).data('target')).removeClass('hidden');
+
+          });
+
+        });
+      <% end %>
+<% end %>
+
+<% content_for(:after_js) do %>
+  <%= javascript_tag do %>
+    $(document).ready(function() {
+      var handler = Gmaps.build('Google', { markers: { clusterer: undefined }});
+      handler.buildMap({ internal: { id: 'map' } }, function(){
+        markers = handler.addMarkers([
+          {
+            "lat": <% @contact.latitude %>,
+            "lng": <% @contact.longitude %>
+          };
+        handler.bounds.extendWith(markers);
+        handler.fitMapToBounds();
+      });
+    });
+  <% end %>
+<% end %>
+
+

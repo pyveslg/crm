@@ -1,0 +1,29 @@
+.login-box {
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid white;
+  box-shadow: 1px -1px 13px white;;
+
+}
+
+.login-banner {
+  color: black;
+  text-align: center;
+  height: 100vh;
+  /* if you have a 70px navbar => height: calc(100vh - 70px); */
+  background-size: cover !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.form-group {
+  text-align: left;
+  padding: 10px 0px;
+}
+
+.form-actions {
+  padding: 10px;
+  margin-bottom: 20px;
+}
